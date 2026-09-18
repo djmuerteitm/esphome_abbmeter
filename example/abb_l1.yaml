@@ -1,0 +1,101 @@
+# Añadir junto al UART RS-485 y al bus Modbus que ya existen en van_main.
+external_components:
+  - source: github://djmuerteitm/esphome_abbmeter@v0.1.0
+    components: [abb_meter]
+
+sensor:
+  # ABB L1/L1-N. Las direcciones son las del manual ABB y usan FC 03.
+  - platform: abb_meter
+    modbus_id: energy_modbus
+    address: 1
+    register_address: 0x5B00
+    value_type: U_DWORD
+    scale: 0.1
+    name: "van_volts"
+    id: van_voltios
+    unit_of_measurement: V
+    device_class: voltage
+    state_class: measurement
+
+  - platform: abb_meter
+    modbus_id: energy_modbus
+    address: 1
+    register_address: 0x5B0C
+    value_type: U_DWORD
+    scale: 0.01
+    name: "van_amps"
+    id: van_amperios
+    unit_of_measurement: A
+    device_class: current
+    state_class: measurement
+
+  - platform: abb_meter
+    modbus_id: energy_modbus
+    address: 1
+    register_address: 0x5B16
+    value_type: S_WORD
+    scale: 0.01
+    name: "van_pow"
+    id: van_watios
+    unit_of_measurement: W
+    device_class: power
+    state_class: measurement
+
+  # En uso monofásico, la potencia activa L1 equivale al total mostrado.
+  - platform: abb_meter
+    modbus_id: energy_modbus
+    address: 1
+    register_address: 0x5B16
+    value_type: S_WORD
+    scale: 0.01
+    name: "van_consumototal"
+    id: van_powertotal
+    unit_of_measurement: W
+    device_class: power
+    state_class: measurement
+
+  - platform: abb_meter
+    modbus_id: energy_modbus
+    address: 1
+    register_address: 0x5B26
+    value_type: S_WORD
+    scale: 0.01
+    name: "van_vamps"
+    unit_of_measurement: VA
+    device_class: apparent_power
+    state_class: measurement
+
+  - platform: abb_meter
+    modbus_id: energy_modbus
+    address: 1
+    register_address: 0x5B2C
+    value_type: U_WORD
+    scale: 0.01
+    name: "van_freqs"
+    id: van_powerfreq
+    unit_of_measurement: Hz
+    device_class: frequency
+    state_class: measurement
+    accuracy_decimals: 1
+
+  - platform: abb_meter
+    modbus_id: energy_modbus
+    address: 1
+    register_address: 0x5B3B
+    value_type: S_WORD
+    scale: 0.001
+    name: "van_powf"
+    device_class: power_factor
+    state_class: measurement
+
+  - platform: abb_meter
+    modbus_id: energy_modbus
+    address: 1
+    register_address: 0x5460
+    value_type: U_QWORD
+    scale: 0.01
+    name: "van_contador"
+    id: van_contador
+    unit_of_measurement: kWh
+    device_class: energy
+    state_class: total_increasing
